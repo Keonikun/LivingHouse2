@@ -1,0 +1,232 @@
+{
+    "asset" : {
+        "generator" : "Khronos glTF Blender I/O v1.6.16",
+        "version" : "2.0"
+    },
+    "scene" : 0,
+    "scenes" : [
+        {
+            "name" : "Scene",
+            "nodes" : [
+                0
+            ]
+        }
+    ],
+    "nodes" : [
+        {
+            "mesh" : 0,
+            "name" : "sinkKey",
+            "rotation" : [
+                0.7111182808876038,
+                0,
+                0.7030723690986633,
+                -2.8539969321172975e-07
+            ],
+            "scale" : [
+                0.10911981016397476,
+                0.10911981016397476,
+                0.10911981016397476
+            ],
+            "translation" : [
+                -1.4817235469818115,
+                1.1021111011505127,
+                6.288904666900635
+            ]
+        }
+    ],
+    "animations" : [
+        {
+            "channels" : [
+                {
+                    "sampler" : 0,
+                    "target" : {
+                        "node" : 0,
+                        "path" : "translation"
+                    }
+                },
+                {
+                    "sampler" : 1,
+                    "target" : {
+                        "node" : 0,
+                        "path" : "rotation"
+                    }
+                },
+                {
+                    "sampler" : 2,
+                    "target" : {
+                        "node" : 0,
+                        "path" : "scale"
+                    }
+                }
+            ],
+            "name" : "sinkKeyAction",
+            "samplers" : [
+                {
+                    "input" : 4,
+                    "interpolation" : "STEP",
+                    "output" : 5
+                },
+                {
+                    "input" : 4,
+                    "interpolation" : "STEP",
+                    "output" : 6
+                },
+                {
+                    "input" : 4,
+                    "interpolation" : "STEP",
+                    "output" : 7
+                }
+            ]
+        }
+    ],
+    "materials" : [
+        {
+            "doubleSided" : true,
+            "emissiveFactor" : [
+                1,
+                0.7373700694716945,
+                0.4213059477324066
+            ],
+            "name" : "keyMaterial",
+            "pbrMetallicRoughness" : {
+                "baseColorFactor" : [
+                    0.36723792552948,
+                    0.23733395338058472,
+                    0.12374547868967056,
+                    1
+                ],
+                "roughnessFactor" : 0.3529411554336548
+            }
+        }
+    ],
+    "meshes" : [
+        {
+            "name" : "Plane.017",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 0,
+                        "NORMAL" : 1,
+                        "TEXCOORD_0" : 2
+                    },
+                    "indices" : 3,
+                    "material" : 0
+                }
+            ]
+        }
+    ],
+    "accessors" : [
+        {
+            "bufferView" : 0,
+            "componentType" : 5126,
+            "count" : 412,
+            "max" : [
+                0.1825207769870758,
+                3.665378400796726e-08,
+                0.16145507991313934
+            ],
+            "min" : [
+                -0.6258333325386047,
+                -0.02021251805126667,
+                -0.16145996749401093
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 1,
+            "componentType" : 5126,
+            "count" : 412,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 2,
+            "componentType" : 5126,
+            "count" : 412,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 3,
+            "componentType" : 5123,
+            "count" : 624,
+            "type" : "SCALAR"
+        },
+        {
+            "bufferView" : 4,
+            "componentType" : 5126,
+            "count" : 1,
+            "max" : [
+                0.041666666666666664
+            ],
+            "min" : [
+                0.041666666666666664
+            ],
+            "type" : "SCALAR"
+        },
+        {
+            "bufferView" : 5,
+            "componentType" : 5126,
+            "count" : 1,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 6,
+            "componentType" : 5126,
+            "count" : 1,
+            "type" : "VEC4"
+        },
+        {
+            "bufferView" : 7,
+            "componentType" : 5126,
+            "count" : 1,
+            "type" : "VEC3"
+        }
+    ],
+    "bufferViews" : [
+        {
+            "buffer" : 0,
+            "byteLength" : 4944,
+            "byteOffset" : 0
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 4944,
+            "byteOffset" : 4944
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 3296,
+            "byteOffset" : 9888
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 1248,
+            "byteOffset" : 13184
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 4,
+            "byteOffset" : 14432
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 12,
+            "byteOffset" : 14436
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 16,
+            "byteOffset" : 14448
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 12,
+            "byteOffset" : 14464
+        }
+    ],
+    "buffers" : [
+        {
+            "byteLength" : 14476,
+            "uri" : "key.bin"
+        }
+    ]
+}

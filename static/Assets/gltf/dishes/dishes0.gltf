@@ -1,0 +1,133 @@
+{
+    "asset" : {
+        "generator" : "Khronos glTF Blender I/O v1.6.16",
+        "version" : "2.0"
+    },
+    "scene" : 0,
+    "scenes" : [
+        {
+            "name" : "Scene",
+            "nodes" : [
+                0
+            ]
+        }
+    ],
+    "nodes" : [
+        {
+            "mesh" : 0,
+            "name" : "dishes",
+            "rotation" : [
+                0,
+                0.9998323917388916,
+                0,
+                0.01830912195146084
+            ],
+            "scale" : [
+                0.7080199718475342,
+                0.7080199718475342,
+                0.7080199718475342
+            ],
+            "translation" : [
+                -1.6815412044525146,
+                0.8605464100837708,
+                6.490863800048828
+            ]
+        }
+    ],
+    "materials" : [
+        {
+            "doubleSided" : true,
+            "name" : "plateMaterial",
+            "pbrMetallicRoughness" : {
+                "baseColorFactor" : [
+                    0.800000011920929,
+                    0.800000011920929,
+                    0.800000011920929,
+                    1
+                ],
+                "metallicFactor" : 0,
+                "roughnessFactor" : 0.5
+            }
+        }
+    ],
+    "meshes" : [
+        {
+            "name" : "Cylinder.006",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 0,
+                        "NORMAL" : 1,
+                        "TEXCOORD_0" : 2
+                    },
+                    "indices" : 3,
+                    "material" : 0
+                }
+            ]
+        }
+    ],
+    "accessors" : [
+        {
+            "bufferView" : 0,
+            "componentType" : 5126,
+            "count" : 16700,
+            "max" : [
+                0.24579913914203644,
+                0.41403430700302124,
+                0.3908115029335022
+            ],
+            "min" : [
+                -1.4757251739501953,
+                -0.15911763906478882,
+                -0.4730895757675171
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 1,
+            "componentType" : 5126,
+            "count" : 16700,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 2,
+            "componentType" : 5126,
+            "count" : 16700,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 3,
+            "componentType" : 5123,
+            "count" : 60936,
+            "type" : "SCALAR"
+        }
+    ],
+    "bufferViews" : [
+        {
+            "buffer" : 0,
+            "byteLength" : 200400,
+            "byteOffset" : 0
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 200400,
+            "byteOffset" : 200400
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 133600,
+            "byteOffset" : 400800
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 121872,
+            "byteOffset" : 534400
+        }
+    ],
+    "buffers" : [
+        {
+            "byteLength" : 656272,
+            "uri" : "dishes0.bin"
+        }
+    ]
+}
