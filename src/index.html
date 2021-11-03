@@ -6,6 +6,9 @@
     <title>Under Construction...</title>
 </head>
 <body>
+    <div class="loading-screen">
+        <p>Loading...</p>
+    </div>
     <canvas class="webgl"></canvas>
     <div class="clickerMenu">
             <button class="clicker" id="clicker" type="button">Clicker</button>
@@ -21,6 +24,10 @@
                 <button class="workerGain" id="workerGain">Passive Intuition Gain: 50</button>
                 <button class="secret1" id="secret1">Secret #1 (Under Construction...)</button>
             </div>
+            <div class="actions" id="actions">
+                <button class="action1" id="action1" type="button">Action 1</button>
+                <button class="action2" id="action2" type="button">Action 2</button>
+            </div>
     </div>
     <div class="navigation">
         <p class="currentRoom" id="currentRoom">CURRENT ROOM:</p>
@@ -35,7 +42,7 @@
         <div class="roomNavigation">
             <p>Navigation:</p>
             <div class="navigationContainer">
-                <button class="enterButton show" id="enterButton">Enter...</button>
+                <button class="enterButton" id="enterButton">Enter...</button>
                 <button class="sinkButton" id="sinkButton" type="button">Sink</button>
                 <button class="computerRoomButton" id="computerRoomButton" type="button">Computer Room</button>
                 <button class="floorBoardsButton" id="floorBoardsButton" type="button">Floorboards</button>
@@ -44,7 +51,8 @@
                 <button class="deskButton" id="deskButton" type="button">Desk</button>
                 <button class="TVButton" id="TVButton" type="button">TV</button>
                 <button class="backDoorButton" id="backDoorButton" type="button">Red Door</button>
-                <button class="freeRoamButton show" id="freeRoamButton" type="button">Free Roam</button>
+                <button class="freeRoamButton" id="freeRoamButton" type="button">Free Roam</button>
+                <button class="allTasks show" id="allTasks" type="button">all tasks</button>
             </div>
         </div>
         <div class="devConsole">

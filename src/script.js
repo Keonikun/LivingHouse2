@@ -19,6 +19,27 @@ const scene = new THREE.Scene()
  * --------------------LOADERS, MODELS, ANIMATIONS---------------------------
  */
 
+const loadingBarElement = document.querySelector('.loading-screen')
+
+const loadingManager = new THREE.LoadingManager(
+    // Loaded
+    () =>
+    {
+        loadingBarElement.classList.add('ended')
+        gsap.delayedCall(1, () =>
+        {
+            loadingBarElement.classList.add('hide')
+            document.getElementById('enterButton').classList.add('show')
+        })
+        
+    },
+    // Progress
+    (itemURL, itemsLoaded, itemsTotal) =>
+    {
+        const progressRatio = itemsLoaded / itemsTotal
+    }
+)
+
 // Animations
 let mixer = null
 let mixer2 = null
@@ -26,7 +47,7 @@ let mainDoorAction = null
 let computerDoorAction = null
 
 // Models
-const gltfLoader = new GLTFLoader()
+const gltfLoader = new GLTFLoader(loadingManager)
 
 let dishes = [0,1,2,3,4,5,6]
 
@@ -83,13 +104,13 @@ gltfLoader.load(
         scene.add(gltf.scene)
     }
 )
-// gltfLoader.load(
-//     'Assets/gltf/boards.gltf',
-//     (gltf) =>
-//     {
-//         scene.add(gltf.scene)
-//     }
-// )
+gltfLoader.load(
+    'Assets/gltf/boards.gltf',
+    (gltf) =>
+    {
+        scene.add(gltf.scene)
+    }
+)
 gltfLoader.load(
     'Assets/gltf/chair.gltf',
     (gltf) =>
@@ -173,6 +194,7 @@ gltfLoader.load(
     (gltf) =>
     {
         book[0] = gltf.scene
+        book[0].visible = false
         scene.add(book[0])
     }
 )
@@ -181,9 +203,41 @@ gltfLoader.load(
     (gltf) =>
     {
         book[1] = gltf.scene
+        book[1].visible = false
         scene.add(book[1])
     }
 )
+
+/**
+ * -----------------------HTML Document variables---------------------
+ */
+
+const loadingScreenElement = document.getElementById("loading-screen")
+const intuitionElement = document.getElementById("intuition")
+const taskbarElement = document.getElementById("taskbar")
+const taskFillElement = document.getElementById("taskFill")
+const upgradesElement = document.getElementById("upgrades")
+const clickerElement = document.getElementById("clicker")
+const clickGainElement = document.getElementById("clickGain")
+const workerGainElement = document.getElementById("workerGain")
+const navigationElement = document.getElementById("navigation")
+const currentRoomElement = document.getElementById("currentRoom")
+const currentTaskElement = document.getElementById("currentTask")
+const notificationElement = document.getElementById("notification")
+const inventoryElement = document.getElementById("inventory")
+const enterButtonElement = document.getElementById("enterButton")
+const sinkButtonElement = document.getElementById("sinkButton")
+const deskButtonElement = document.getElementById("deskButton")
+const computerRoomButtonElement = document.getElementById("computerRoomButton")
+const floorBoardsButtonElement = document.getElementById("floorBoardsButton")
+const bathroomButtonElement = document.getElementById("bathroomButton")
+const keepingRoomButtonElement = document.getElementById("keepingRoomButton")
+const backDoorButtonElement = document.getElementById("backDoorButton")
+
+const key1Element = document.getElementById("key1")
+
+const action1Element = document.getElementById("action1")
+const action2Element = document.getElementById("action2")
 
 
 /**
@@ -201,7 +255,7 @@ gltfLoader.load(
  */
 
 let defaultState = [1,0,0,0,0]
-let sinkState = [0,0,1000,0,0]
+let sinkState = [0,0,500,0,0]
 let computerRoomState = [0,0,0,0,0]
 let deskState = [0,0,5000,0,0]
 let bathroomState = [0,0,200,0,0]
@@ -218,8 +272,9 @@ let freeRoamState = [1,0,0,0,0]
  */
 
 let defaultTimedEvents = [1]
-let sinkTimedEvents = [20,80,150,300,600,800,1000]
+let sinkTimedEvents = [1, 2, 100, 150, 200, 300, 500]
 let computerRoomTimedEvents = [10]
+let deskTimedEvents = [100, 300, 1000, 2500, 5000]
 let freeRoamTimedEvents = [1]
 
 //   MAIN IDLE COMPONENTS
@@ -236,7 +291,7 @@ let taskStageProgress = eval(currentStage + 'State')[4]
 //   MAIN CLICKER FUNCTION
 let clickingEnabled = false
 
-document.getElementById("clicker").addEventListener("click", () =>
+clickerElement.addEventListener("click", () =>
 {
     if (clickingEnabled === true)
     {
@@ -249,7 +304,7 @@ document.getElementById("clicker").addEventListener("click", () =>
         //Increase Intuition
         intuition += clickCountUp
         //Update HTML
-        document.getElementById("intuition").innerHTML = Math.round(intuition)
+        intuitionElement.innerHTML = Math.round(intuition)
         //Check if task is finished
         if(eval(currentStage + 'State')[2] == eval(currentStage + 'State')[3])
         {
@@ -287,14 +342,18 @@ audioLoader.load(
  {
     dishes[0].visible = false
     dishes[1].visible = true
-    document.getElementById("notification").innerHTML = "You found a key..."
-    document.getElementById("inventory").classList.add('show')
-    document.getElementById("key1").classList.add("show")
+    notificationElement.innerHTML = "You found a key..."
+    inventoryElement.classList.add('show')
+    key1Element.classList.add("show")
  }
  const sinkEvent1 = () =>
  {
-     dishes[1].visible = false
-     dishes[2].visible = true
+    dishes[1].visible = false
+    dishes[2].visible = true
+    deskButtonElement.classList.add('show')
+    deskState.splice(0,1,1)
+    book[0].visible = true
+    notificationElement.innerHTML = "The sound of a book falling..."
  }
  const sinkEvent2 = () =>
  {
@@ -329,9 +388,7 @@ const moonLight = new THREE.DirectionalLight('#ffffff', 0.5)
 moonLight.position.set(4, 5, - 2)
 scene.add(moonLight)
 
-/**
- * Sizes
- */
+//   Sizes
 const sizes = {
     width: window.innerWidth / 1.3,
     height: window.innerHeight / 1.3
@@ -392,6 +449,8 @@ let freeRoam = false
 // const controls = new OrbitControls(camera, canvas)
 // controls.enableDamping = true
 
+
+
 /**
  * ---------------------GSAP Animations---------------------------
  */
@@ -425,19 +484,19 @@ const toComputerDoorJustUnlocked = () =>
     gsap.to(cameraRotation, {x: Math.PI * 1.54, delay: 2, duration: 1})
     gsap.to(lookAtObject.position, {y: 1.32, delay: 2, duration: 1})
 }
-const sinkToBathroom = () =>
+const toBathroom = () =>
 {
     gsap.to(lookAtObject.position, {y: 1.6, duration: 1})
     gsap.to(cameraRotation, {x: Math.PI * 1.5, duration: 1})
     gsap.to(camera.position, {x: 0, z: 3, duration: 1})
 }
-const computerDoorToSink = () =>
+const toSink = () =>
 {
     gsap.to(cameraRotation, {x: Math.PI * 0.5, duration: 2})
     gsap.to(lookAtObject.position, {y: 1.1, duration: 2})
     gsap.to(camera.position, {x: -1.5, z: 5.5, y: 1.6, duration: 2})
 }
-const livingRoomToDesk = () =>
+const toDesk = () =>
 {
     gsap.to(cameraRotation, {x: Math.PI, duration: 1})
     gsap.to(lookAtObject.position, {y: 1.6, duration: 1})
@@ -445,6 +504,22 @@ const livingRoomToDesk = () =>
     gsap.to(camera.position, {x: -3.5, delay: 1, duration: 1})
     gsap.to(camera.position, {z: 5.8, delay: 1, duration: 1})
     gsap.to(lookAtObject.position, {y: 1.3, delay: 1, duration: 1})
+}
+const writeBook = () =>
+{
+    gsap.to(camera.position, {x: -4.3, z: 5.85, duration: 1})
+    gsap.to(lookAtObject.position, {y: 0.5, duration: 1})
+}
+const toWriteBook = () =>
+{
+    gsap.to(cameraRotation, {x: Math.PI, duration: 1})
+    gsap.to(lookAtObject.position, {y: 1.6, duration: 1})
+    gsap.to(camera.position, {x: -1.5, z: 5.5, duration: 1})
+    gsap.to(camera.position, {x: -3.5, delay: 1, duration: 1})
+    gsap.to(camera.position, {z: 5.8, delay: 1, duration: 1})
+    gsap.to(lookAtObject.position, {y: 1.3, delay: 1, duration: 1})
+    gsap.to(camera.position, {x: -4.3, z: 5.85, delay: 1.5, duration: 1})
+    gsap.to(lookAtObject.position, {y: 0.5, delay: 1.5, duration: 1})
 }
 const exitComputerRoom = () =>
 {
@@ -465,123 +540,166 @@ const toBackDoor = () =>
     gsap.to(cameraRotation, {x: Math.PI, duration: 1})
 }
 
+
+/**
+ * --------------------------Navigation-----------------------------
+ */
+
+let availableButtons = []
+let hideButtons = false
+
+const navigationHandler = () =>
+{
+    if(hideButtons === true)
+    {
+        availableButtons.forEach(element => 
+        
+            element.classList.remove('show')
+        )
+    }
+    else if(hideButtons === false)
+    {
+        availableButtons.forEach(element => 
+        
+            element.classList.add('show')
+        )
+    }   
+}
+
 /**
  *  ---------------------HTML EVENT LISTENERS--------------------------
  */
+
 // NAVIGATION
 
-document.getElementById("enterButton").addEventListener("click", () =>
+enterButtonElement.addEventListener("click", () =>
 {
     if(defaultState[0] === 1)
     {
         enter()
         mainDoorAction.play()
         sinkState.splice( 0, 1, 1 )
-        defaultState.splice( 0, 1, 0, )
-        document.getElementById("enterButton").classList.remove('show')
-        document.getElementById("deskButton").classList.add('show')
-        document.getElementById("bathroomButton").classList.add('show')
-        document.getElementById("computerRoomButton").classList.add('show')
-        document.getElementById("sinkButton").classList.add('show')
-        document.getElementById("currentRoom").classList.add('show')
-        document.getElementById("currentRoom").innerHTML = "CURRENT ROOM:<br>Living Room"
-        document.getElementById("keepingRoomButton").classList.add('show')
-        document.getElementById("backDoorButton").classList.add('show')
-        document.getElementById("freeRoamButton").classList.add('show')
+        defaultState.splice( 0, 1, 0 )
+        availableButtons.push(sinkButtonElement, computerRoomButtonElement)
+        enterButtonElement.classList.remove('show')   
+        computerRoomButtonElement.classList.add('show')
+        sinkButtonElement.classList.add('show')
+        currentRoomElement.classList.add('show')
+        currentRoomElement.innerHTML = "CURRENT ROOM:<br>Living Room"
     }
     else if(defaultState[0] === 2)
     {
         exitComputerRoom()
-        document.getElementById("enterButton").classList.remove('show')
-        document.getElementById("deskButton").classList.add('show')
-        document.getElementById("bathroomButton").classList.add('show')
-        document.getElementById("computerRoomButton").classList.add('show')
-        document.getElementById("sinkButton").classList.add('show')
-        document.getElementById("upgrades").classList.remove('show')
+        enterButtonElement.classList.remove('show')
+        upgradesElement.classList.remove('show')
+        hideButtons = false
+        navigationHandler()
     }
 
 })
-document.getElementById("sinkButton").addEventListener("click", () =>
+sinkButtonElement.addEventListener("click", () =>
 {
     if(sinkState[0] === 1)
     {
-        document.getElementById("currentTask").classList.add('show')
-        document.getElementById("currentTask").innerHTML = "CURRENT TASK:<br>Dishes"
-        document.getElementById("clicker").innerHTML = "Wash Dishes"
-        document.getElementById("clicker").classList.add('show')
-        document.getElementById("taskbar").classList.add('show')
+        currentTaskElement.classList.add('show')
+        currentTaskElement.innerHTML = "CURRENT TASK:<br>Dishes"
+        clickerElement.innerHTML = "Wash Dishes"
+        clickerElement.classList.add('show')
+        taskbarElement.classList.add('show')
         stagePicker = 'sink'
         clickingEnabled = true
-        computerDoorToSink()
+        toSink()
         console.log(sinkState)
     }
 })
-document.getElementById("computerRoomButton").addEventListener("click", () =>
+computerRoomButtonElement.addEventListener("click", () =>
 {
     if(computerRoomState[0] === 0)
     {
         stagePicker = 'computerRoom'
         toComputerDoorLocked()
-        document.getElementById("currentTask").innerHTML = "CURRENT TASK:<br>None"
-        document.getElementById("clicker").classList.remove('show')
-        document.getElementById("taskbar").classList.remove('show')
+        currentTaskElement.innerHTML = "CURRENT TASK:<br>None"
+        clickerElement.classList.remove('show')
+        taskbarElement.classList.remove('show')
     }
     else if(computerRoomState[0] === 1)
     {
         stagePicker = 'computerRoom'
         toComputerDoorUnlocked()
-        document.getElementById("currentRoom").innerHTML = "CURRENT ROOM:<br>Computer Room"
-        document.getElementById("sinkButton").classList.remove("show")
-        document.getElementById("bathroomButton").classList.remove("show")
-        document.getElementById("computerRoomButton").classList.remove("show")
-        document.getElementById("deskButton").classList.remove("show")
-        document.getElementById("enterButton").classList.add("show")
-        document.getElementById("upgrades").classList.add("show")
-        document.getElementById("enterButton").classList.add("show")
-        document.getElementById("clicker").classList.remove('show')
-        document.getElementById("taskbar").classList.remove('show')
+        currentRoomElement.innerHTML = "CURRENT ROOM:<br>Computer Room"
+        currentRoomElement.classList.remove("show")
+        hideButtons = true
+        navigationHandler()
+        enterButtonElement.classList.add("show")
+        upgradesElement.classList.add("show")
+        clickerElement.classList.remove('show')
+        taskbarElement.classList.remove('show')
     }
     console.log(computerRoomState)
 })
-document.getElementById("bathroomButton").addEventListener("click", () => 
+bathroomButtonElement.addEventListener("click", () => 
 {
     if(bathroomState[0] === 0)
     {
         stagePicker = 'default'
-        sinkToBathroom()
-        document.getElementById("currentTask").innerHTML = "CURRENT TASK:<br>None"
-        document.getElementById("clicker").classList.remove('show')
-        document.getElementById("taskbar").classList.remove('show')
+        toBathroom()
+        currentTaskElement.innerHTML = "CURRENT TASK:<br>None"
+        clickerElement.classList.remove('show')
+        taskbarElement.classList.remove('show')
     }
     else if(bathroomState[0] === 1)
     {
-        sinkToBathroom()
+        toBathroom()
         stagePicker = 'bathroom'
-        document.getElementById("clicker").classList.add('show')
-        document.getElementById("taskbar").classList.add('show')
+        clickerElement.classList.add('show')
+        taskbarElement.classList.add('show')
     }
     // easy menu
     // document.getElementById("upgrades").classList.add("show")
 })
-document.getElementById("deskButton").addEventListener("click", () => 
+deskButtonElement.addEventListener("click", () => 
 {
     if(deskState[0] === 0)
     {
         stagePicker = 'default'
-        livingRoomToDesk()
-        document.getElementById("currentTask").innerHTML = "CURRENT TASK:<br>None"
-        document.getElementById("clicker").classList.remove('show')
-        document.getElementById("taskbar").classList.remove('show')
+        toDesk()
+        currentTaskElement.innerHTML = "CURRENT TASK:<br>None"
+        clickerElement.classList.remove('show')
+        taskbarElement.classList.remove('show')
     }    
     else if(deskState[0] === 1)
     {
+        stagePicker = 'default'
+        toDesk()
+        action1Element.innerHTML = "Open Book"
+        action1Element.addEventListener('click', () =>
+        {
+            stagePicker = 'desk'
+            book[0].visible = false
+            book[1].visible = true
+            deskState.splice(0,1,2)
+            currentTaskElement.innerHTML = "CURRENT TASK:<br>Writing"
+            clickerElement.innerHTML = "Write"
+            clickerElement.classList.add('show')
+            taskbarElement.classList.add('show')
+            action1Element.classList.remove('show')
+            writeBook()
+        })
+        action1Element.classList.add('show')
+        clickerElement.classList.remove('show')
+        taskbarElement.classList.remove('show')
+    }
+    else if(deskState[0] === 2)
+    {
         stagePicker = 'desk'
-        livingRoomToDesk()
-        document.getElementById("clicker").classList.add('show')
-        document.getElementById("taskbar").classList.add('show')
+        currentTaskElement.innerHTML = "CURRENT TASK:<br>Writing"
+        clickerElement.innerHTML = "Write"
+        toWriteBook()
+        clickerElement.classList.add('show')
+        taskbarElement.classList.add('show')
     }
 })
-document.getElementById("keepingRoomButton").addEventListener('click', () =>
+keepingRoomButtonElement.addEventListener('click', () =>
 {
     if(keepingRoomState[0] === 0)
     {
@@ -593,7 +711,7 @@ document.getElementById("keepingRoomButton").addEventListener('click', () =>
         stagePicker = 'keepingRoom'
     }
 })
-document.getElementById("backDoorButton").addEventListener('click', () =>
+backDoorButtonElement.addEventListener('click', () =>
 {
     if(backRoomState[0] === 0)
     {
@@ -625,29 +743,36 @@ document.getElementById("freeRoamButton").addEventListener('click', () =>
 
 // INVENTORY
 
-document.getElementById("key1").addEventListener("click", () =>
+key1Element.addEventListener("click", () =>
 {
     if(currentStage === 'computerRoom')
     {
-        document.getElementById("notification").innerHTML = "You unlocked the computer room door."
-        document.getElementById("key1").classList.remove("show")
+        notificationElement.innerHTML = "You unlocked the computer room door."
+        key1Element.classList.remove("show")
         computerRoomState.splice(0,1,1)
         computerDoorAction.play()
         defaultState.splice(0,1,2)
-        document.getElementById("currentRoom").innerHTML = "CURRENT ROOM:<br>Computer Room"
-        document.getElementById("enterButton").innerHTML = "Exit"
-        document.getElementById("sinkButton").classList.remove("show")
-        document.getElementById("bathroomButton").classList.remove("show")
-        document.getElementById("computerRoomButton").classList.remove("show")
-        document.getElementById("deskButton").classList.remove("show")
-        document.getElementById("enterButton").classList.add("show")
-        document.getElementById("upgrades").classList.add("show")
+        currentRoomElement.innerHTML = "CURRENT ROOM:<br>Computer Room"
+        enterButtonElement.innerHTML = "Exit"
+        upgradesElement.classList.add('show')
+        enterButtonElement.classList.add('show')
+
+        hideButtons = true
+        navigationHandler()
         toComputerDoorJustUnlocked()
     }
     else
     {
-        document.getElementById("notification").innerHTML = "This key cannot be used here."
+        notificationElement.innerHTML = "This key cannot be used here."
     }
+})
+
+document.getElementById('allTasks').addEventListener('click', () =>
+{
+    document.getElementById("deskButton").classList.add("show")
+    document.getElementById("bathroomButton").classList.add("show")
+    document.getElementById("keepingRoomButton").classList.add("show")
+    document.getElementById("backDoorButton").classList.add("show")
 })
 
 // UPGRADES
@@ -657,7 +782,7 @@ let intuitionGainUp = 1
 let clickGainCost = 50
 let clickCountUp = 1
 
-document.getElementById("workerGain").addEventListener("click", () =>
+workerGainElement.addEventListener("click", () =>
 {
     if(intuition >= intuitionGainCost)
     {
@@ -666,16 +791,16 @@ document.getElementById("workerGain").addEventListener("click", () =>
         intuitionGainUp *= 1.5
         intuitionGainCost *= 2
         console.log("bought worker")
-        document.getElementById("workerGain").innerHTML = "Passive Intuition Gain: " + String(Math.round(intuitionGainCost))
+        workerGainElement.innerHTML = "Passive Intuition Gain: " + String(Math.round(intuitionGainCost))
     }
     else
     {
-        document.getElementById("notification").innerHTML = "Not enough intuition..."
+        notificationElement.innerHTML = "Not enough intuition..."
         console.log("cannot afford")
     }
     document.getElementById("intuition").innerHTML = intuition
 })
-document.getElementById("clickGain").addEventListener("click", () =>
+clickGainElement.addEventListener("click", () =>
 {
     if(intuition >= clickGainCost)
     {
@@ -683,14 +808,14 @@ document.getElementById("clickGain").addEventListener("click", () =>
         clickCountUp += 1
         clickGainCost *= 2
         console.log("bought Click")
-        document.getElementById("clickGain").innerHTLM = "Intuition Click Gain: " + String(Math.round(clickGainCost))
+        clickGainElement.innerHTLM = "Intuition Click Gain: " + String(Math.round(clickGainCost))
     }
     else
     {
-        document.getElementById("notification").innerHTML = "Not enough intuition..."
+        notificationElement.innerHTML = "Not enough intuition..."
         console.log("cannot afford")
     }
-    document.getElementById("intuition").innerHTML = intuition
+    intuitionElement.innerHTML = intuition
 })
 
 /**
@@ -741,10 +866,6 @@ const tick = () =>
     const deltaTime = elapsedTime - previousTime
     previousTime = elapsedTime
 
-    // ENABLE ORBIT CONTROLS HERE
-    // Update controls
-    // controls.update()
-
     /**
      * IDLE TICK FUNCTION
      */
@@ -766,11 +887,11 @@ const tick = () =>
         //Count Up Actions
         intuition += workerCountUp
         taskCurrentCount += workerCountUp
-        if(eval(currentStage + 'State')[2] > 0)
+        if(eval(currentStage + 'State')[0] === 2)
         {
             eval(currentStage + 'State').splice(3, 1, taskCurrentCount)
         }
-        document.getElementById("intuition").innerHTML = Math.round(intuition)
+        intuitionElement.innerHTML = Math.round(intuition)
     }
     
     if(freeRoamEnabled === true)
@@ -797,7 +918,7 @@ const tick = () =>
     
     
     //TaskBar Update
-    document.getElementById("taskFill").style.width = 
+    taskFillElement.style.width = 
     ((eval(currentStage + 'State')[3] / 
     eval(currentStage + 'State')[2]) * 100)
     .toString() + "%"
