@@ -5,9 +5,7 @@ import * as dat from 'dat.gui'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { gsap } from 'gsap'
 
-/**
- * ----------------------------------Base-------------------------------------
- */
+//----------------------------------Base-------------------------------------
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -15,9 +13,7 @@ const canvas = document.querySelector('canvas.webgl')
 // Scene
 const scene = new THREE.Scene()
 
-/**
- * --------------------LOADERS, MODELS, ANIMATIONS---------------------------
- */
+//--------------------LOADERS, MODELS, ANIMATIONS---------------------------
 
 const loadingBarElement = document.querySelector('.loading-screen')
 
@@ -43,8 +39,11 @@ const loadingManager = new THREE.LoadingManager(
 // Animations
 let mixer = null
 let mixer2 = null
+let mixer3 = null
+
 let mainDoorAction = null
 let computerDoorAction = null
+let boardsDoorAction = null
 
 // Models
 const gltfLoader = new GLTFLoader(loadingManager)
@@ -61,6 +60,7 @@ gltfLoader.load(
         scene.add(gltf.scene)
     }
 )
+//Doors
 gltfLoader.load(
     'Assets/gltf/mainDoor.gltf',
     (gltf) =>
@@ -104,6 +104,7 @@ gltfLoader.load(
         scene.add(gltf.scene)
     }
 )
+//boards
 gltfLoader.load(
     'Assets/gltf/boards.gltf',
     (gltf) =>
@@ -111,6 +112,7 @@ gltfLoader.load(
         scene.add(gltf.scene)
     }
 )
+//Chairs
 gltfLoader.load(
     'Assets/gltf/chair.gltf',
     (gltf) =>
@@ -118,6 +120,19 @@ gltfLoader.load(
         scene.add(gltf.scene)
     }
 )
+//Boards Door
+gltfLoader.load(
+    'Assets/gltf/boardsDoor.gltf',
+    (gltf) =>
+    {
+        mixer3 = new THREE.AnimationMixer( gltf.scene )
+        boardsDoorAction = mixer3.clipAction(gltf.animations[0])
+        boardsDoorAction.setLoop( THREE.LoopOnce )
+        boardsDoorAction.clampWhenFinished = true
+        scene.add(gltf.scene)
+    }
+)
+//Dishes
 gltfLoader.load(
     'Assets/gltf/dishes/dishes0.gltf',
     (gltf) =>
@@ -181,14 +196,25 @@ gltfLoader.load(
         scene.add(dishes[6])
     }
 )
+//Rug
 gltfLoader.load(
     'Assets/gltf/rug.gltf',
     (gltf) =>
     {
         rug[0] = gltf.scene
+        rug[0].visible = false
         scene.add(rug[0])
     }
 )
+gltfLoader.load(
+    'Assets/gltf/rug2.gltf',
+    (gltf) =>
+    {
+        rug[1] = gltf.scene
+        scene.add(rug[1])
+    }
+)
+//Book
 gltfLoader.load(
     'Assets/gltf/bookState1.gltf',
     (gltf) =>
@@ -207,19 +233,30 @@ gltfLoader.load(
         scene.add(book[1])
     }
 )
+//Broom
+gltfLoader.load(
+    'Assets/gltf/broom.gltf',
+    (gltf) =>
+    {
+        gltf.scene
+        scene.add(gltf.scene)
+    }
+)
 
-/**
- * -----------------------HTML Document variables---------------------
- */
+//-----------------------HTML Document variables---------------------
 
 const loadingScreenElement = document.getElementById("loading-screen")
 const intuitionElement = document.getElementById("intuition")
+const intuitionCostElement = document.getElementById("intuitionCost")
 const taskbarElement = document.getElementById("taskbar")
 const taskFillElement = document.getElementById("taskFill")
 const upgradesElement = document.getElementById("upgrades")
 const clickerElement = document.getElementById("clicker")
+
 const clickGainElement = document.getElementById("clickGain")
 const workerGainElement = document.getElementById("workerGain")
+const secret1Element = document.getElementById("secret1")
+
 const navigationElement = document.getElementById("navigation")
 const currentRoomElement = document.getElementById("currentRoom")
 const currentTaskElement = document.getElementById("currentTask")
@@ -235,14 +272,15 @@ const keepingRoomButtonElement = document.getElementById("keepingRoomButton")
 const backDoorButtonElement = document.getElementById("backDoorButton")
 
 const key1Element = document.getElementById("key1")
+const boardspdfElement = document.getElementById("boardspdf")
 
 const action1Element = document.getElementById("action1")
 const action2Element = document.getElementById("action2")
 
 
-/**
- * -----------------------------IDLE COMPONENT------------------------
- */
+
+//-----------------------------IDLE COMPONENT------------------------
+
 
 //   STAGE STATES
 /**
@@ -262,6 +300,8 @@ let bathroomState = [0,0,200,0,0]
 let keepingRoomState = [0,0,50000,0,0]
 let backRoomState = [0,0,0,0,0]
 let freeRoamState = [1,0,0,0,0]
+let backDoorState = [0,0,1000000,0,0]
+let TVState = [0,0,10000,0,0]
 
 /**
  * The last item within each stage array is 'taskStageProgress'.
@@ -272,10 +312,13 @@ let freeRoamState = [1,0,0,0,0]
  */
 
 let defaultTimedEvents = [1]
-let sinkTimedEvents = [1, 2, 100, 150, 200, 300, 500]
+let sinkTimedEvents = [1, 2, 3, 4, 5, 6]
 let computerRoomTimedEvents = [10]
-let deskTimedEvents = [100, 300, 1000, 2500, 5000]
+let deskTimedEvents = [1]
 let freeRoamTimedEvents = [1]
+let backDoorTimedEvents = [1]
+let TVTimedEvents = [10,20,30]
+let bathroomTimedEvents = [1]
 
 //   MAIN IDLE COMPONENTS
 let intuition = 0
@@ -289,11 +332,9 @@ let taskTotalCount = eval(currentStage + 'State')[2]
 let taskStageProgress = eval(currentStage + 'State')[4]
 
 //   MAIN CLICKER FUNCTION
-let clickingEnabled = false
-
 clickerElement.addEventListener("click", () =>
 {
-    if (clickingEnabled === true)
+    if (eval(currentStage + 'State')[0] >= 1 && eval(currentStage + 'State')[1] === 0)
     {
         if(eval(currentStage + 'State')[3] < eval(currentStage + 'State')[2])
         {
@@ -306,7 +347,7 @@ clickerElement.addEventListener("click", () =>
         //Update HTML
         intuitionElement.innerHTML = Math.round(intuition)
         //Check if task is finished
-        if(eval(currentStage + 'State')[2] == eval(currentStage + 'State')[3])
+        if(eval(currentStage + 'State')[3] >= eval(currentStage + 'State')[2])
         {
             //Add the 'Completed' state (1) to stageState array
             eval(currentStage + 'State').splice( 1, 1, 1 )
@@ -316,10 +357,9 @@ clickerElement.addEventListener("click", () =>
 })
 //   WORKER
 let workerCountUp = 0
+let TVGain = 2
 
-/**
- * ---------------------------SOUNDS---------------------------------
- */
+//---------------------------SOUNDS---------------------------------
 
 const listener = new THREE.AudioListener();
 const windowSound = new THREE.PositionalAudio( listener );
@@ -334,11 +374,9 @@ audioLoader.load(
     })
 
 
-/**
- * -------------------------TIMED EVENTS-----------------------------
- */
-
- const sinkEvent0 = () =>
+//-------------------------TIMED EVENTS-----------------------------
+//  SINK
+const sinkEvent0 = () =>
  {
     dishes[0].visible = false
     dishes[1].visible = true
@@ -351,14 +389,19 @@ audioLoader.load(
     dishes[1].visible = false
     dishes[2].visible = true
     deskButtonElement.classList.add('show')
-    deskState.splice(0,1,1)
+    deskState.splice(0,1,-1)
     book[0].visible = true
+    availableButtons.push(deskButtonElement)
     notificationElement.innerHTML = "The sound of a book falling..."
  }
  const sinkEvent2 = () =>
  {
      dishes[2].visible = false
      dishes[3].visible = true
+     TVState.splice(0,1,1)
+    action1Element.classList.add('show')
+    action1Element.innerHTML = "Watch TV"
+    notificationElement.innerHTML = "You notice the neighbors TV spur to life."
  }
  const sinkEvent3 = () =>
  {
@@ -367,18 +410,40 @@ audioLoader.load(
  }
  const sinkEvent4 = () =>
  {
-     dishes[4].visible = false
-     dishes[5].visible = true
+    dishes[4].visible = false
+    dishes[5].visible = true
+    
  }
  const sinkEvent5 = () =>
  {
      dishes[5].visible = false
      dishes[6].visible = true
  }
+//  DESK
+const deskEvent0 = () =>
+{
+    availableButtons.push(backDoorButtonElement, keepingRoomButtonElement, bathroomButtonElement)
+    backDoorButtonElement.classList.add('show')
+    keepingRoomButtonElement.classList.add('show')
+    bathroomButtonElement.classList.add('show')
+}
+// TV
+const TVEvent0 = () =>
+{
+    notificationElement.innerHTML = "A faint familiarity washes over you as you watch the distant screen."
+}
+const TVEvent1 = () =>
+{
+    notificationElement.innerHTML = "Spending quality time relaxing."
+}
+const TVEvent2 = () =>
+{
+    notificationElement.innerHTML = "What lies beyond that distant screen?"
+}
 
-/**
- * Lights
- */
+
+//------------------------------Lights--------------------------------
+
 // Ambient light
 const ambientLight = new THREE.AmbientLight('#ffffff', 0.5)
 scene.add(ambientLight)
@@ -410,20 +475,18 @@ window.addEventListener('resize', () =>
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
 
-/**
- * --------------------------Camera----------------------------------
- */
+//-------------------------Camera----------------------------------
+
+let cameraFOV = {x: 65}
+let cameraRotation = {x:Math.PI}
 
 // Base camera
-const camera = new THREE.PerspectiveCamera(65, sizes.width / sizes.height, 0.1, 100)
+const camera = new THREE.PerspectiveCamera(cameraFOV.x, sizes.width / sizes.height, 0.1, 100)
 camera.position.y = 1.6
 camera.position.z = 3
 camera.position.x = 6.1
 camera.add( listener )
 scene.add(camera)
-
-// Camera LookAt Object
-let cameraRotation = {x:Math.PI}
 
 const lookAtGeometry = new THREE.BoxGeometry(0.01,0.01,0.01)
 const lookAtMaterial = new THREE.MeshBasicMaterial({color: 0x000000})
@@ -445,15 +508,8 @@ let freeRoam = false
 
 // First Person Controls
 
-// ENABLE ORBIT CONTROLS HERE
-// const controls = new OrbitControls(camera, canvas)
-// controls.enableDamping = true
+//---------------------GSAP Animations---------------------------
 
-
-
-/**
- * ---------------------GSAP Animations---------------------------
- */
 const enter = () =>
 {
 
@@ -538,12 +594,36 @@ const toBackDoor = () =>
 {
     gsap.to(camera.position, {x: -3, z: 4, y: 1.6, duration: 1})
     gsap.to(cameraRotation, {x: Math.PI, duration: 1})
+    gsap.to(lookAtObject.position, {y: 1.6, duration: 1})
+}
+const sweepBackDoor = () =>
+{
+    gsap.to(camera.position, {x: -4, duration: 1})
+    gsap.to(lookAtObject.position, {y: 0.5, duration: 1})
+    gsap.to(cameraRotation, {x: Math.PI, duration: 1})
+}
+const listenBackDoor = () =>
+{
+    gsap.to(camera.position, {x: -5, duration: 1})
+    gsap.to(lookAtObject.position, {y: 1.3, duration: 1})
+    gsap.to(cameraRotation, {x: Math.PI / 2, duration: 1})
+}
+const watchTV = () =>
+{
+    gsap.to(lookAtObject.position, {y: 1.6, duration: 1})
+    gsap.to(camera.position, {x: -1.5, z: 6.2, y: 1.7, duration: 1})
+    gsap.to(cameraFOV, {x: 1000, duration: 2})
+}
+const exitTV = () =>
+{
+    gsap.to(lookAtObject.position, {y: 1.1, duration: 1})
+    gsap.to(camera.position, {x: -1.5, z: 5.5, y: 1.6, duration: 1})
+    gsap.to(cameraFOV, {x: 65, duration: 1})
+    
 }
 
 
-/**
- * --------------------------Navigation-----------------------------
- */
+//--------------------------Navigation-----------------------------
 
 let availableButtons = []
 let hideButtons = false
@@ -566,15 +646,15 @@ const navigationHandler = () =>
     }   
 }
 
-/**
- *  ---------------------HTML EVENT LISTENERS--------------------------
- */
+
+
+// ---------------------HTML EVENT LISTENERS--------------------------
 
 // NAVIGATION
 
 enterButtonElement.addEventListener("click", () =>
 {
-    if(defaultState[0] === 1)
+    if(defaultState[0] === 1 && stagePicker === 'default')
     {
         enter()
         mainDoorAction.play()
@@ -587,7 +667,7 @@ enterButtonElement.addEventListener("click", () =>
         currentRoomElement.classList.add('show')
         currentRoomElement.innerHTML = "CURRENT ROOM:<br>Living Room"
     }
-    else if(defaultState[0] === 2)
+    else if(defaultState[0] === 2 && stagePicker === 'computerRoom')
     {
         exitComputerRoom()
         enterButtonElement.classList.remove('show')
@@ -595,10 +675,23 @@ enterButtonElement.addEventListener("click", () =>
         hideButtons = false
         navigationHandler()
     }
+    else if(currentStage === "TV")
+    {
+        hideButtons = false
+        navigationHandler()
+        stagePicker = 'sink'
+        action1Element.classList.add('show')
+        clickerElement.classList.add('show')
+        taskbarElement.classList.add('show')
+        enterButtonElement.classList.remove('show')
+        workerCountUp -= TVGain
+        exitTV()
+    }
 
 })
 sinkButtonElement.addEventListener("click", () =>
 {
+    stagePicker = 'sink'
     if(sinkState[0] === 1)
     {
         currentTaskElement.classList.add('show')
@@ -606,25 +699,29 @@ sinkButtonElement.addEventListener("click", () =>
         clickerElement.innerHTML = "Wash Dishes"
         clickerElement.classList.add('show')
         taskbarElement.classList.add('show')
-        stagePicker = 'sink'
-        clickingEnabled = true
         toSink()
         console.log(sinkState)
+    }
+    if(TVState[0] === 1)
+    {
+        action1Element.innerHTML = "Watch TV"
+        action1Element.classList.add('show')
     }
 })
 computerRoomButtonElement.addEventListener("click", () =>
 {
+    stagePicker = 'computerRoom'
     if(computerRoomState[0] === 0)
     {
-        stagePicker = 'computerRoom'
         toComputerDoorLocked()
         currentTaskElement.innerHTML = "CURRENT TASK:<br>None"
         clickerElement.classList.remove('show')
         taskbarElement.classList.remove('show')
+        action1Element.classList.remove('show')
+        action2Element.classList.remove('show')
     }
     else if(computerRoomState[0] === 1)
     {
-        stagePicker = 'computerRoom'
         toComputerDoorUnlocked()
         currentRoomElement.innerHTML = "CURRENT ROOM:<br>Computer Room"
         currentRoomElement.classList.remove("show")
@@ -639,18 +736,20 @@ computerRoomButtonElement.addEventListener("click", () =>
 })
 bathroomButtonElement.addEventListener("click", () => 
 {
+    stagePicker = 'bathroom'
+
     if(bathroomState[0] === 0)
     {
-        stagePicker = 'default'
         toBathroom()
         currentTaskElement.innerHTML = "CURRENT TASK:<br>None"
         clickerElement.classList.remove('show')
         taskbarElement.classList.remove('show')
+        action1Element.classList.remove('show')
+        action2Element.classList.remove('show')
     }
     else if(bathroomState[0] === 1)
     {
         toBathroom()
-        stagePicker = 'bathroom'
         clickerElement.classList.add('show')
         taskbarElement.classList.add('show')
     }
@@ -659,39 +758,26 @@ bathroomButtonElement.addEventListener("click", () =>
 })
 deskButtonElement.addEventListener("click", () => 
 {
+    stagePicker = 'desk'
     if(deskState[0] === 0)
     {
-        stagePicker = 'default'
         toDesk()
         currentTaskElement.innerHTML = "CURRENT TASK:<br>None"
         clickerElement.classList.remove('show')
         taskbarElement.classList.remove('show')
     }    
-    else if(deskState[0] === 1)
+    else if(deskState[0] === -1)
     {
-        stagePicker = 'default'
         toDesk()
         action1Element.innerHTML = "Open Book"
-        action1Element.addEventListener('click', () =>
-        {
-            stagePicker = 'desk'
-            book[0].visible = false
-            book[1].visible = true
-            deskState.splice(0,1,2)
-            currentTaskElement.innerHTML = "CURRENT TASK:<br>Writing"
-            clickerElement.innerHTML = "Write"
-            clickerElement.classList.add('show')
-            taskbarElement.classList.add('show')
-            action1Element.classList.remove('show')
-            writeBook()
+        gsap.delayedCall(2, () => {
+            action1Element.classList.add('show')
         })
-        action1Element.classList.add('show')
         clickerElement.classList.remove('show')
         taskbarElement.classList.remove('show')
     }
     else if(deskState[0] === 2)
     {
-        stagePicker = 'desk'
         currentTaskElement.innerHTML = "CURRENT TASK:<br>Writing"
         clickerElement.innerHTML = "Write"
         toWriteBook()
@@ -705,6 +791,10 @@ keepingRoomButtonElement.addEventListener('click', () =>
     {
         stagePicker = 'default'
         toKeepingRoom()
+        action1Element.classList.remove('show')
+        action2Element.classList.remove('show')
+        clickerElement.classList.remove('show')
+        taskbarElement.classList.remove('show')
     }
     else if(keepingRoomState[0] === 1)
     {
@@ -713,10 +803,14 @@ keepingRoomButtonElement.addEventListener('click', () =>
 })
 backDoorButtonElement.addEventListener('click', () =>
 {
+    stagePicker = 'backDoor'
     if(backRoomState[0] === 0)
     {
-        stagePicker = 'default'
         toBackDoor()
+        action1Element.innerHTML = "Foot of Door..."
+        action2Element.innerHTML = "Listen"
+        action1Element.classList.add('show')
+        action2Element.classList.add('show')
     }
 })
 document.getElementById("freeRoamButton").addEventListener('click', () =>
@@ -738,6 +832,50 @@ document.getElementById("freeRoamButton").addEventListener('click', () =>
         freeRoamEnabled = false
         console.log("free roam disabled")
         freeRoamState.splice(0,1,1)
+    }
+})
+
+// Action 1 and 2 for ALL rooms and tasks
+
+action1Element.addEventListener('click', () =>
+{
+    if(currentStage === "desk" && deskState[0] === -1)
+    {
+        stagePicker = 'desk'
+        book[0].visible = false
+        book[1].visible = true
+        deskState.splice(0,1,2)
+        currentTaskElement.innerHTML = "CURRENT TASK:<br>Writing"
+        clickerElement.innerHTML = "Write"
+        clickerElement.classList.add('show')
+        taskbarElement.classList.add('show')
+        action1Element.classList.remove('show')
+        writeBook()
+    }
+    else if(currentStage === 'backDoor')
+    {
+        sweepBackDoor()
+    }
+    else if(currentStage === 'sink' && TVState[0] === 1)
+    {
+        stagePicker = 'TV'
+        watchTV()
+        enterButtonElement.innerHTML = "Exit"
+        action1Element.classList.remove('show')
+        clickerElement.classList.remove('show')
+        taskbarElement.classList.remove('show')
+        enterButtonElement.classList.add('show')
+        hideButtons = true
+        workerCountUp += TVGain
+        navigationHandler()
+    }
+})
+action2Element.addEventListener('click', () =>
+{
+    console.log('clicked')
+    if(currentStage === 'backDoor')
+    {
+        listenBackDoor()  
     }
 })
 
@@ -766,6 +904,13 @@ key1Element.addEventListener("click", () =>
         notificationElement.innerHTML = "This key cannot be used here."
     }
 })
+boardspdfElement.addEventListener('click', () =>
+{
+    if(floorBoardsState[0] === 0)
+    {
+        
+    }
+})
 
 document.getElementById('allTasks').addEventListener('click', () =>
 {
@@ -790,8 +935,8 @@ workerGainElement.addEventListener("click", () =>
         workerCountUp += intuitionGainUp
         intuitionGainUp *= 1.5
         intuitionGainCost *= 2
-        console.log("bought worker")
-        workerGainElement.innerHTML = "Passive Intuition Gain: " + String(Math.round(intuitionGainCost))
+        notificationElement.innerHTML = "bought worker"
+        intuitionCostElement.innerHTML = "&nbsp;-&nbsp;" + String(Math.round(intuitionGainCost))
     }
     else
     {
@@ -807,8 +952,8 @@ clickGainElement.addEventListener("click", () =>
         intuition -= clickGainCost
         clickCountUp += 1
         clickGainCost *= 2
-        console.log("bought Click")
-        clickGainElement.innerHTLM = "Intuition Click Gain: " + String(Math.round(clickGainCost))
+        notificationElement.innerHTML = "bought click"
+        intuitionCostElement.innerHTML = "&nbsp;-&nbsp;" + String(Math.round(clickGainCost))
     }
     else
     {
@@ -817,10 +962,32 @@ clickGainElement.addEventListener("click", () =>
     }
     intuitionElement.innerHTML = intuition
 })
+workerGainElement.addEventListener("mouseover", () => 
+{
+    intuitionCostElement.innerHTML = "&nbsp;-&nbsp;" + String(Math.round(intuitionGainCost))
+}) 
+workerGainElement.addEventListener("mouseout", () => 
+{
+    intuitionCostElement.innerHTML = ""
+}) 
+clickGainElement.addEventListener("mouseover", () =>
+{
+    intuitionCostElement.innerHTML = "&nbsp;-&nbsp;" + String(Math.round(clickGainCost))
+})
+clickGainElement.addEventListener("mouseout", () => 
+{
+    intuitionCostElement.innerHTML = ""
+}) 
+secret1Element.addEventListener("mouseover", () =>
+{
+    intuitionCostElement.innerHTML = "&nbsp;-&nbsp;" + "500"
+})
+secret1Element.addEventListener("mouseout", () => 
+{
+    intuitionCostElement.innerHTML = ""
+}) 
 
-/**
- * ----------------------First Person Controls----------------------------
- */
+//----------------------First Person Controls----------------------------
 
 let keyboard = {}
 let freeRoamEnabled = false
@@ -839,9 +1006,7 @@ window.addEventListener('keydown', keyDown)
 window.addEventListener('keyup', keyUp)
 
 
-/**
- * -------------------------------Renderer--------------------------------
- */
+//-------------------------------Renderer--------------------------------
 
 const renderer = new THREE.WebGLRenderer({
     canvas: canvas,
@@ -851,9 +1016,8 @@ renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 renderer.outputEncoding = THREE.sRGBEncoding
 
-/**
- * ---------------------------------Animate-------------------------------
- */
+//---------------------------------Animate-------------------------------
+
 const clock = new THREE.Clock()
 
 let tickValue = 1
@@ -871,10 +1035,11 @@ const tick = () =>
      */
 
     // Update Animation Mixer
-    if(mixer2 !== null && mixer !== null)
+    if(mixer2 !== null && mixer !== null && mixer3 !== null)
     {
         mixer.update(deltaTime)
         mixer2.update(deltaTime)
+        mixer3.update(deltaTime)
     }
 
     currentStage = stagePicker
@@ -887,9 +1052,14 @@ const tick = () =>
         //Count Up Actions
         intuition += workerCountUp
         taskCurrentCount += workerCountUp
-        if(eval(currentStage + 'State')[0] === 2)
+        if(eval(currentStage + 'State')[0] >= 1 && eval(currentStage + 'State')[1] === 0)
         {
             eval(currentStage + 'State').splice(3, 1, taskCurrentCount)
+            //Set the stage to 'complete' if currentTask = totalTask
+            if(eval(currentStage + 'State')[3] >= eval(currentStage + 'State')[2])
+            {
+                eval(currentStage + 'State').splice(1,1,1)
+            }
         }
         intuitionElement.innerHTML = Math.round(intuition)
     }

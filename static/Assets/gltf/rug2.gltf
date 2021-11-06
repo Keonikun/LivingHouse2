@@ -41,19 +41,6 @@
                 ],
                 "metallicFactor" : 0
             }
-        },
-        {
-            "doubleSided" : true,
-            "name" : "carpet2Material",
-            "pbrMetallicRoughness" : {
-                "baseColorFactor" : [
-                    0.015994930639863014,
-                    0.015994930639863014,
-                    0.015994930639863014,
-                    1
-                ],
-                "metallicFactor" : 0
-            }
         }
     ],
     "meshes" : [
@@ -68,15 +55,6 @@
                     },
                     "indices" : 3,
                     "material" : 0
-                },
-                {
-                    "attributes" : {
-                        "POSITION" : 4,
-                        "NORMAL" : 5,
-                        "TEXCOORD_0" : 6
-                    },
-                    "indices" : 7,
-                    "material" : 1
                 }
             ]
         }
@@ -85,117 +63,63 @@
         {
             "bufferView" : 0,
             "componentType" : 5126,
-            "count" : 5,
+            "count" : 8,
             "max" : [
                 0.8730599880218506,
-                0,
+                0.0074773430824279785,
                 1
             ],
             "min" : [
-                -0.9153475761413574,
-                -6.169654565013616e-09,
-                -1.0000001192092896
+                -0.915347695350647,
+                -6.286894560503242e-09,
+                -1.000000238418579
             ],
             "type" : "VEC3"
         },
         {
             "bufferView" : 1,
             "componentType" : 5126,
-            "count" : 5,
+            "count" : 8,
             "type" : "VEC3"
         },
         {
             "bufferView" : 2,
             "componentType" : 5126,
-            "count" : 5,
+            "count" : 8,
             "type" : "VEC2"
         },
         {
             "bufferView" : 3,
             "componentType" : 5123,
-            "count" : 9,
-            "type" : "SCALAR"
-        },
-        {
-            "bufferView" : 4,
-            "componentType" : 5126,
-            "count" : 3,
-            "max" : [
-                0.022551298141479492,
-                0.0009322883561253548,
-                0.6101795434951782
-            ],
-            "min" : [
-                -0.9153475761413574,
-                -6.169654565013616e-09,
-                -1.0000001192092896
-            ],
-            "type" : "VEC3"
-        },
-        {
-            "bufferView" : 5,
-            "componentType" : 5126,
-            "count" : 3,
-            "type" : "VEC3"
-        },
-        {
-            "bufferView" : 6,
-            "componentType" : 5126,
-            "count" : 3,
-            "type" : "VEC2"
-        },
-        {
-            "bufferView" : 7,
-            "componentType" : 5123,
-            "count" : 3,
+            "count" : 12,
             "type" : "SCALAR"
         }
     ],
     "bufferViews" : [
         {
             "buffer" : 0,
-            "byteLength" : 60,
+            "byteLength" : 96,
             "byteOffset" : 0
         },
         {
             "buffer" : 0,
-            "byteLength" : 60,
-            "byteOffset" : 60
+            "byteLength" : 96,
+            "byteOffset" : 96
         },
         {
             "buffer" : 0,
-            "byteLength" : 40,
-            "byteOffset" : 120
-        },
-        {
-            "buffer" : 0,
-            "byteLength" : 18,
-            "byteOffset" : 160
-        },
-        {
-            "buffer" : 0,
-            "byteLength" : 36,
-            "byteOffset" : 180
-        },
-        {
-            "buffer" : 0,
-            "byteLength" : 36,
-            "byteOffset" : 216
+            "byteLength" : 64,
+            "byteOffset" : 192
         },
         {
             "buffer" : 0,
             "byteLength" : 24,
-            "byteOffset" : 252
-        },
-        {
-            "buffer" : 0,
-            "byteLength" : 6,
-            "byteOffset" : 276
+            "byteOffset" : 256
         }
     ],
     "buffers" : [
         {
-            "byteLength" : 284,
+            "byteLength" : 280,
             "uri" : "rug2.bin"
         }
     ]

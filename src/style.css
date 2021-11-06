@@ -84,7 +84,8 @@ body
     opacity: 1;
 }
 
-.intuition{
+.intuitionContainer
+{
     padding: 2px 3px;
     position: absolute;
     top: 25%;
@@ -92,6 +93,16 @@ body
     transform: translate(-50%);
     color: white;
     background-color: #404040;
+    display: flex;
+}
+
+.intuition{
+    font-weight: 20px;
+}
+
+.intuitionCost{
+    font-style: italic;
+    color: rgb(255, 188, 188);
 }
 
 .taskbar{
@@ -143,7 +154,7 @@ body
     text-decoration: none;
     background-color: rgb(26, 26, 26);
     border: none;
-    transition: 0.2s;
+    transition: 0.5s;
     color: white;
     opacity: 0;
     visibility: hidden;
@@ -155,6 +166,11 @@ body
 }
 
 .action1.show{
+    opacity: 1;
+    visibility: visible;
+}
+
+.action2.show{
     opacity: 1;
     visibility: visible;
 }
@@ -251,12 +267,21 @@ body
     border: 3px solid white;
     background-color: #404040;
     color: white;
-    transition: 2s;
+    transition: 1s;
     opacity: 0;
-    visibility: hiddne;
+    visibility: hidden;
+}
+
+.inventoryContainer button:hover{
+    background-color: black;
 }
 
 .key1.show{
+    visibility: visible;
+    opacity: 1;
+}
+
+.boardspdf.show{
     visibility: visible;
     opacity: 1;
 }
@@ -299,9 +324,13 @@ body
     border: 3px solid white;
     background-color: #404040;
     color: white;
-    transition: 2s;
+    transition: 1s;
     opacity: 0;
     visibility: hidden;
+}
+
+.navigationContainer button:hover{
+    background-color: black;
 }
 
 .enterButton.show{
@@ -386,6 +415,13 @@ body
     height: 50%; 
     width: 25%;
     float: left;
+    transition: 0.5s;
+    font-style: italic;
+    word-wrap: break-word;
+}
+
+.upgrades button:hover{
+    background-color: black;
 }
 
 

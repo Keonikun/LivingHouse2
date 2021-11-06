@@ -12,7 +12,10 @@
     <canvas class="webgl"></canvas>
     <div class="clickerMenu">
             <button class="clicker" id="clicker" type="button">Clicker</button>
-            <p class="intuition" id="intuition">0</p>
+            <div class="intuitionContainer">
+                <p class="intuition" id="intuition">0</p>
+                <p class="intuitionCost" id="intuitionCost"></p>
+            </div>
             <div class="taskbar" id="taskbar">
                 <p>Task:</p>
                 <div class="taskFillContainer">
@@ -20,9 +23,9 @@
                 </div>
             </div>
             <div class="upgrades" id="upgrades">
-                <button class="clickGain" id="clickGain">Intuition Click Gain: 50</button>
-                <button class="workerGain" id="workerGain">Passive Intuition Gain: 50</button>
-                <button class="secret1" id="secret1">Secret #1 (Under Construction...)</button>
+                <button class="clickGain" id="clickGain">Intuitive<br>Touch.exe</button>
+                <button class="workerGain" id="workerGain">Elementary<br>Experience.exe</button>
+                <button class="secret1" id="secret1">strange<br>Sounds.pdf</button>
             </div>
             <div class="actions" id="actions">
                 <button class="action1" id="action1" type="button">Action 1</button>
@@ -35,8 +38,9 @@
         <div class="notification" id="notification"></div>
         <div class="inventory" id="inventory">
             <p>Inventory :</p>
-            <div class="inventoryContainer">
+            <div class="inventoryContainer show">
                 <button class="key1" id="key1">Key</button>
+                <button class="boardspdf show" id="boardspdf">strangeSounds.pdf</button>
             </div>
         </div>
         <div class="roomNavigation">
