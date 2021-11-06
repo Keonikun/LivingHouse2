@@ -40,10 +40,14 @@ const loadingManager = new THREE.LoadingManager(
 let mixer = null
 let mixer2 = null
 let mixer3 = null
+let mixer4 = null
+
+let mixers = [mixer,mixer2,mixer3,mixer4]
 
 let mainDoorAction = null
 let computerDoorAction = null
 let boardsDoorAction = null
+let standInAction = null
 
 // Models
 const gltfLoader = new GLTFLoader(loadingManager)
@@ -52,6 +56,7 @@ let dishes = [0,1,2,3,4,5,6]
 
 let rug = [0,1]
 let book = [0,1]
+let key = null
 
 gltfLoader.load(
     '/Assets/gltf/LivingHouse.gltf',
@@ -242,6 +247,28 @@ gltfLoader.load(
         scene.add(gltf.scene)
     }
 )
+//StandIn
+gltfLoader.load(
+    'Assets/gltf/standIn.gltf',
+    (gltf) =>
+    {
+        mixer4 = new THREE.AnimationMixer( gltf.scene )
+        standInAction = mixer4.clipAction(gltf.animations[0])
+        standInAction.setLoop( THREE.LoopOnce )
+        standInAction.clampWhenFinished = true
+        gltf.scene
+        scene.add(gltf.scene)
+    }
+)
+gltfLoader.load(
+    'Assets/gltf/key.gltf',
+    (gltf) =>
+    {
+        key = gltf.scene
+        key.position.set(0,-0.17,0.32)
+        scene.add(key)
+    }
+)
 
 //-----------------------HTML Document variables---------------------
 
@@ -297,7 +324,7 @@ let sinkState = [0,0,500,0,0]
 let computerRoomState = [0,0,0,0,0]
 let deskState = [0,0,5000,0,0]
 let bathroomState = [0,0,200,0,0]
-let keepingRoomState = [0,0,50000,0,0]
+let keepingRoomState = [1,0,50000,0,0]
 let backRoomState = [0,0,0,0,0]
 let freeRoamState = [1,0,0,0,0]
 let backDoorState = [0,0,1000000,0,0]
@@ -312,13 +339,14 @@ let TVState = [0,0,10000,0,0]
  */
 
 let defaultTimedEvents = [1]
-let sinkTimedEvents = [1, 2, 3, 4, 5, 6]
+let sinkTimedEvents = [5, 10, 50, 100, 200, 300, 500]
 let computerRoomTimedEvents = [10]
 let deskTimedEvents = [1]
 let freeRoamTimedEvents = [1]
 let backDoorTimedEvents = [1]
 let TVTimedEvents = [10,20,30]
 let bathroomTimedEvents = [1]
+let keepingRoomTimedEvents = []
 
 //   MAIN IDLE COMPONENTS
 let intuition = 0
@@ -362,29 +390,94 @@ let TVGain = 2
 //---------------------------SOUNDS---------------------------------
 
 const listener = new THREE.AudioListener();
-const windowSound = new THREE.PositionalAudio( listener );
+const windowSound = new THREE.PositionalAudio( listener )
+const tickingSound = new THREE.PositionalAudio( listener )
+const bookSound = new THREE.PositionalAudio( listener )
+const voicesSound = new THREE.PositionalAudio( listener )
 const audioLoader = new THREE.AudioLoader();
+
+
 audioLoader.load( 
     '/Assets/ogg/windowAmbience.ogg',
     (buffer) =>
     {
         windowSound.setBuffer( buffer )
-        windowSound.setRefDistance( 5 )
+        windowSound.setRefDistance( 0.3 )
         windowSound.play()
-    })
+})
+audioLoader.load( 
+    '/Assets/ogg/clock.ogg',
+    (buffer) =>
+    {
+        tickingSound.setBuffer( buffer )
+        tickingSound.setRefDistance( 0.3 )
+        tickingSound.setLoop(THREE.LoopRepeat)
+        tickingSound.play()
+})
+audioLoader.load( 
+    '/Assets/ogg/book.ogg',
+    (buffer) =>
+    {
+        bookSound.setBuffer( buffer )
+        bookSound.setRefDistance( 1 )
+})
+audioLoader.load( 
+    '/Assets/ogg/voices.ogg',
+    (buffer) =>
+    {
+        voicesSound.setBuffer( buffer )
+        voicesSound.setRefDistance( 0.02 )
+        voicesSound.setLoop(THREE.LoopRepeat)
+        voicesSound.play()
+})
+
+const speakerGeo = new THREE.SphereGeometry(0.2,8,8)
+const speakerMat = new THREE.MeshBasicMaterial({ color: 0xffffff, visible: true })
+
+const tickingSpeaker = new THREE.Mesh( speakerGeo, speakerMat )
+scene.add(tickingSpeaker)
+tickingSpeaker.position.set(-1,1.4,0)
+tickingSpeaker.add(tickingSound)
+
+const windowSpeaker = new THREE.Mesh( speakerGeo, speakerMat )
+scene.add( windowSpeaker )
+windowSpeaker.position.set(-1,1.4,9)
+windowSpeaker.add( windowSound )
+
+const bookSpeaker = new THREE.Mesh( speakerGeo, speakerMat )
+scene.add( bookSpeaker )
+bookSpeaker.position.set(-3,1.4,6)
+bookSpeaker.add( bookSound )
+
+const voicesSpeaker = new THREE.Mesh( speakerGeo, speakerMat )
+scene.add( voicesSpeaker )
+voicesSpeaker.position.set(-5.2,1.6,4)
+voicesSpeaker.add( voicesSound )
 
 
 //-------------------------TIMED EVENTS-----------------------------
 //  SINK
 const sinkEvent0 = () =>
  {
-    dishes[0].visible = false
-    dishes[1].visible = true
-    notificationElement.innerHTML = "You found a key..."
-    inventoryElement.classList.add('show')
-    key1Element.classList.add("show")
+    notificationElement.innerHTML = "You begin washing dishes without knowing why. An inclination of sorts."
  }
  const sinkEvent1 = () =>
+ {
+    dishes[0].visible = false
+    dishes[1].visible = true
+    notificationElement.innerHTML = "You found a key in the dishes"
+    gsap.delayedCall(0.5, () =>
+    {
+        gsap.to(key.position, {x:0, y:0.2, z:-0.5, duration: 1})
+        gsap.delayedCall(1.2, () =>
+        {
+            key.visible = false
+            key1Element.classList.add("show")
+            inventoryElement.classList.add('show')
+        })
+    })
+ }
+ const sinkEvent2 = () =>
  {
     dishes[1].visible = false
     dishes[2].visible = true
@@ -392,32 +485,34 @@ const sinkEvent0 = () =>
     deskState.splice(0,1,-1)
     book[0].visible = true
     availableButtons.push(deskButtonElement)
+    bookSound.play()
     notificationElement.innerHTML = "The sound of a book falling..."
- }
- const sinkEvent2 = () =>
- {
-     dishes[2].visible = false
-     dishes[3].visible = true
-     TVState.splice(0,1,1)
-    action1Element.classList.add('show')
-    action1Element.innerHTML = "Watch TV"
-    notificationElement.innerHTML = "You notice the neighbors TV spur to life."
  }
  const sinkEvent3 = () =>
  {
-     dishes[3].visible = false
-     dishes[4].visible = true
+    dishes[2].visible = false
+    dishes[3].visible = true
+    TVState.splice(0,1,1)
+    action1Element.classList.add('show')
+    action1Element.innerHTML = "Watch TV"
+    notificationElement.innerHTML = "You notice the neighbors TV spur to life."  
  }
  const sinkEvent4 = () =>
  {
-    dishes[4].visible = false
-    dishes[5].visible = true
+    dishes[3].visible = false
+    dishes[4].visible = true
     
  }
  const sinkEvent5 = () =>
  {
-     dishes[5].visible = false
+    dishes[4].visible = false
+    dishes[5].visible = true
+ }
+ const sinkEvent6 = () => 
+ {
+    dishes[5].visible = false
      dishes[6].visible = true
+     sinkState.splice(1,1,1)
  }
 //  DESK
 const deskEvent0 = () =>
@@ -438,6 +533,7 @@ const TVEvent1 = () =>
 }
 const TVEvent2 = () =>
 {
+    standInAction.play()
     notificationElement.innerHTML = "What lies beyond that distant screen?"
 }
 
@@ -475,7 +571,7 @@ window.addEventListener('resize', () =>
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
 
-//-------------------------Camera----------------------------------
+//-----------------------------Camera----------------------------------
 
 let cameraFOV = {x: 65}
 let cameraRotation = {x:Math.PI}
@@ -495,13 +591,7 @@ lookAtObject.visible = false
 scene.add(lookAtObject)
 lookAtObject.position.y = 1.6
 
-const speakerGeo = new THREE.SphereGeometry(0.2,8,8)
-const speakerMat = new THREE.MeshBasicMaterial({ color: 0xffffff, visible: false })
-const windowSpeaker = new THREE.Mesh( speakerGeo, speakerMat )
-scene.add( windowSpeaker )
-windowSpeaker.position.set(-1,1.4,9)
 
-windowSpeaker.add( windowSound )
 
 //  TOGGLE BETWEEN 'FIXED' AND 'FREE ROAM'
 let freeRoam = false
@@ -512,11 +602,7 @@ let freeRoam = false
 
 const enter = () =>
 {
-
-    gsap.to(camera.position, { x: 5, duration: 0.5 })
-    gsap.to(camera.position, { x: 4, delay: 1, duration: 0.5 })
-    gsap.to(camera.position, { x: 3, delay: 2, duration: 0.5 })
-    gsap.to(camera.position, { x: -1, delay: 3, duration: 1 })
+    gsap.to(camera.position, { x: -1, duration: 2 })
 }
 const toComputerDoorLocked = () =>
 {
@@ -548,9 +634,9 @@ const toBathroom = () =>
 }
 const toSink = () =>
 {
-    gsap.to(cameraRotation, {x: Math.PI * 0.5, duration: 2})
-    gsap.to(lookAtObject.position, {y: 1.1, duration: 2})
-    gsap.to(camera.position, {x: -1.5, z: 5.5, y: 1.6, duration: 2})
+    gsap.to(cameraRotation, {x: Math.PI * 0.5, duration: 1})
+    gsap.to(lookAtObject.position, {y: 1.1, duration: 1})
+    gsap.to(camera.position, {x: -1.5, z: 5.5, y: 1.6, duration: 1})
 }
 const toDesk = () =>
 {
@@ -656,16 +742,23 @@ enterButtonElement.addEventListener("click", () =>
 {
     if(defaultState[0] === 1 && stagePicker === 'default')
     {
-        enter()
+        
+        gsap.delayedCall(1, () =>
+        {
+            enter()
+        })
         mainDoorAction.play()
         sinkState.splice( 0, 1, 1 )
         defaultState.splice( 0, 1, 0 )
         availableButtons.push(sinkButtonElement, computerRoomButtonElement)
         enterButtonElement.classList.remove('show')   
-        computerRoomButtonElement.classList.add('show')
-        sinkButtonElement.classList.add('show')
-        currentRoomElement.classList.add('show')
-        currentRoomElement.innerHTML = "CURRENT ROOM:<br>Living Room"
+        gsap.delayedCall(2, () =>
+        {
+            computerRoomButtonElement.classList.add('show')
+            sinkButtonElement.classList.add('show')
+            currentRoomElement.classList.add('show')
+            currentRoomElement.innerHTML = "CURRENT ROOM:<br>Living Room"
+        })
     }
     else if(defaultState[0] === 2 && stagePicker === 'computerRoom')
     {
@@ -727,8 +820,11 @@ computerRoomButtonElement.addEventListener("click", () =>
         currentRoomElement.classList.remove("show")
         hideButtons = true
         navigationHandler()
-        enterButtonElement.classList.add("show")
-        upgradesElement.classList.add("show")
+        gsap.delayedCall(2, () =>
+        {
+            enterButtonElement.classList.add("show")
+            upgradesElement.classList.add("show")
+        })
         clickerElement.classList.remove('show')
         taskbarElement.classList.remove('show')
     }
@@ -787,10 +883,12 @@ deskButtonElement.addEventListener("click", () =>
 })
 keepingRoomButtonElement.addEventListener('click', () =>
 {
+    stagePicker = 'keepingRoom'
     if(keepingRoomState[0] === 0)
     {
-        stagePicker = 'default'
         toKeepingRoom()
+        currentRoomElement.innerHTML = "CURRENT ROOM:<br>Living Room"
+        currentTaskElement.innerHTML = "CURRENT Task:<br>None"
         action1Element.classList.remove('show')
         action2Element.classList.remove('show')
         clickerElement.classList.remove('show')
@@ -798,7 +896,11 @@ keepingRoomButtonElement.addEventListener('click', () =>
     }
     else if(keepingRoomState[0] === 1)
     {
-        stagePicker = 'keepingRoom'
+        toKeepingRoom()
+        currentRoomElement.innerHTML = "CURRENT ROOM:<br>Living Room"
+        currentTaskElement.innerHTML = "CURRENT Task:<br>Unfasten Boards"
+        clickerElement.classList.add('show')
+        taskbarElement.classList.add('show')
     }
 })
 backDoorButtonElement.addEventListener('click', () =>
@@ -892,9 +994,11 @@ key1Element.addEventListener("click", () =>
         defaultState.splice(0,1,2)
         currentRoomElement.innerHTML = "CURRENT ROOM:<br>Computer Room"
         enterButtonElement.innerHTML = "Exit"
-        upgradesElement.classList.add('show')
-        enterButtonElement.classList.add('show')
-
+        gsap.delayedCall(2, () =>
+        {
+            upgradesElement.classList.add('show')
+            enterButtonElement.classList.add('show')
+        })
         hideButtons = true
         navigationHandler()
         toComputerDoorJustUnlocked()
@@ -922,9 +1026,9 @@ document.getElementById('allTasks').addEventListener('click', () =>
 
 // UPGRADES
 
-let intuitionGainCost = 50
+let intuitionGainCost = 25
 let intuitionGainUp = 1
-let clickGainCost = 50
+let clickGainCost = 25
 let clickCountUp = 1
 
 workerGainElement.addEventListener("click", () =>
@@ -933,8 +1037,8 @@ workerGainElement.addEventListener("click", () =>
     {
         intuition -= intuitionGainCost
         workerCountUp += intuitionGainUp
-        intuitionGainUp *= 1.5
-        intuitionGainCost *= 2
+        intuitionGainUp *= 2
+        intuitionGainCost *= 3
         notificationElement.innerHTML = "bought worker"
         intuitionCostElement.innerHTML = "&nbsp;-&nbsp;" + String(Math.round(intuitionGainCost))
     }
@@ -950,8 +1054,8 @@ clickGainElement.addEventListener("click", () =>
     if(intuition >= clickGainCost)
     {
         intuition -= clickGainCost
-        clickCountUp += 1
-        clickGainCost *= 2
+        clickCountUp *= 2
+        clickGainCost *= 3
         notificationElement.innerHTML = "bought click"
         intuitionCostElement.innerHTML = "&nbsp;-&nbsp;" + String(Math.round(clickGainCost))
     }
@@ -1030,16 +1134,15 @@ const tick = () =>
     const deltaTime = elapsedTime - previousTime
     previousTime = elapsedTime
 
-    /**
-     * IDLE TICK FUNCTION
-     */
+    
 
     // Update Animation Mixer
-    if(mixer2 !== null && mixer !== null && mixer3 !== null)
+    if(mixer2 !== null && mixer !== null && mixer3 !== null && mixer4 !== null)
     {
         mixer.update(deltaTime)
         mixer2.update(deltaTime)
         mixer3.update(deltaTime)
+        mixer4.update(deltaTime)
     }
 
     currentStage = stagePicker
@@ -1048,7 +1151,7 @@ const tick = () =>
     if(elapsedTime >= tickValue)
     {
         tickValue += 1
-
+        console.log(workerCountUp)
         //Count Up Actions
         intuition += workerCountUp
         taskCurrentCount += workerCountUp
@@ -1102,7 +1205,7 @@ const tick = () =>
     //  If the current stage click count is equal to the stage event click 
     //  count, trigger stage event, then move to next timed event
     //  eg. if(sinkState[3] = sinkTimedEvents[sinkState[4]])...
-    if(eval(currentStage + 'State')[3] === eval(currentStage + 'TimedEvents')[eval(currentStage + 'State')[4]])
+    if(eval(currentStage + 'State')[3] >= eval(currentStage + 'TimedEvents')[eval(currentStage + 'State')[4]])
     {
         console.log("timed event reached")
 
