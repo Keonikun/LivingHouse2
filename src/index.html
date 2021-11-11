@@ -10,7 +10,25 @@
         <p>Loading...</p>
     </div>
     <canvas class="webgl"></canvas>
+    <div class="upgrades" id="upgrades">
+        <div class="menuBar"><p>regedit.exe</p><div><p>&#x2715</p></div><div><p>&#9633</p></div><div><p>-</p></div></div>
+        <button class="clickGain" id="clickGain">Intuitive<br>Touch.exe</button>
+        <button class="workerGain" id="workerGain">Elementary<br>Experience.exe</button>
+        <button class="secret1" id="secret1">strange<br>Sounds.pdf</button>
+    </div>
     <div class="clickerMenu">
+        <div class="menuBar">
+            <p>click.exe</p>
+            <div>
+                <p>&#x2715</p>
+            </div>
+            <div>
+                <p>&#9633</p>
+            </div>
+            <div>
+                <p>-</p>
+            </div>
+        </div>
             <button class="clicker" id="clicker" type="button">Clicker</button>
             <div class="intuitionContainer">
                 <p class="intuition" id="intuition">0</p>
@@ -22,44 +40,57 @@
                     <div id="taskFill" class="taskFill"></div>
                 </div>
             </div>
-            <div class="upgrades" id="upgrades">
-                <button class="clickGain" id="clickGain">Intuitive<br>Touch.exe</button>
-                <button class="workerGain" id="workerGain">Elementary<br>Experience.exe</button>
-                <button class="secret1" id="secret1">strange<br>Sounds.pdf</button>
-            </div>
             <div class="actions" id="actions">
                 <button class="action1" id="action1" type="button">Action 1</button>
                 <button class="action2" id="action2" type="button">Action 2</button>
             </div>
     </div>
     <div class="navigation">
-        <p class="currentRoom" id="currentRoom">CURRENT ROOM:</p>
-        <p class="currentTask" id="currentTask">CURRENT TASK:</p>
-        <div class="notification" id="notification"></div>
-        <div class="inventory" id="inventory">
-            <p>Inventory :</p>
-            <div class="inventoryContainer show">
-                <button class="key1" id="key1">Key</button>
-                <button class="boardspdf" id="boardspdf">strangeSounds.pdf</button>
+            <div class="headerWindow">
+                <div class="menuBar"><p>loc.pdf</p><div><p>&#x2715</p></div><div><p>&#9633</p></div><div><p>-</p></div></div>
+                <p class="currentRoom" id="currentRoom">CURRENT ROOM:</p>
+                <p class="currentTask" id="currentTask">CURRENT TASK:</p>
             </div>
-        </div>
-        <div class="roomNavigation">
-            <p>Navigation:</p>
-            <div class="navigationContainer">
-                <button class="enterButton" id="enterButton">Enter...</button>
-                <button class="sinkButton" id="sinkButton" type="button">Sink</button>
-                <button class="computerRoomButton" id="computerRoomButton" type="button">Computer Room</button>
-                <button class="floorBoardsButton" id="floorBoardsButton" type="button">Floorboards</button>
-                <button class="bathroomButton" id="bathroomButton" type="button">Bathroom</button>
-                <button class="keepingRoomButton" id="keepingRoomButton">Keeping Room</button>
-                <button class="deskButton" id="deskButton" type="button">Desk</button>
-                <button class="TVButton" id="TVButton" type="button">TV</button>
-                <button class="backDoorButton" id="backDoorButton" type="button">Red Door</button>
-                <button class="freeRoamButton" id="freeRoamButton" type="button">Free Roam</button>
-                <button class="allTasks show" id="allTasks" type="button">all tasks</button>
+            <div class="notificationWindow">
+                <div class="menuBar"><p>notif.bat</p><div><p>&#x2715</p></div><div><p>&#9633</p></div><div><p>-</p></div></div>
+                <p class="notification" id="notification"></p>
             </div>
-        </div>
-        <div class="devConsole">
+            <div class="inventory show" id="inventory">
+                <div class="menuBar"><p>Inv.txt</p><div><p>&#x2715</p></div><div><p>&#9633</p></div><div><p>-</p></div></div>
+                <div class="inventoryContainer show">
+                    <button class="key1" id="key1">Key</button>
+                    <button class="boardspdf" id="boardspdf">strangeSounds.pdf</button>
+                </div>
+            </div>
+            <div class="roomNavigation">
+                <div class="menuBar">
+                    <p>nav.exe</p>
+                    <div>
+                        <p>&#x2715</p>
+                    </div>
+                    <div>
+                        <p>&#9633</p>
+                    </div>
+                    <div>
+                        <p>-</p>
+                    </div>
+                </div>
+                <div class="navigationContainer">
+                    <button class="enterButton" id="enterButton">Enter...</button>
+                    <button class="sinkButton" id="sinkButton" type="button">Sink</button>
+                    <button class="computerRoomButton" id="computerRoomButton" type="button">Computer Room</button>
+                    <button class="floorBoardsButton" id="floorBoardsButton" type="button">Floorboards</button>
+                    <button class="bathroomButton" id="bathroomButton" type="button">Bathroom</button>
+                    <button class="keepingRoomButton" id="keepingRoomButton">Keeping Room</button>
+                    <button class="deskButton" id="deskButton" type="button">Desk</button>
+                    <button class="TVButton" id="TVButton" type="button">TV</button>
+                    <button class="backDoorButton" id="backDoorButton" type="button">Red Door</button>
+                    <button class="freeRoamButton" id="freeRoamButton" type="button">Free Roam</button>
+                    <button class="allTasks show" id="allTasks" type="button">all tasks</button>
+                </div>
+            </div>
+            <div class="devConsole">
+            </div>
         </div>
     </div>
 </body>

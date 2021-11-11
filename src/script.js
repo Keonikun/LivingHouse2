@@ -339,7 +339,7 @@ let TVState = [0,0,10000,0,0]
  */
 
 let defaultTimedEvents = [1]
-let sinkTimedEvents = [5, 10, 50, 100, 200, 300, 500]
+let sinkTimedEvents = [5, 25, 50, 100, 200, 300, 500]
 let computerRoomTimedEvents = [10]
 let deskTimedEvents = [1]
 let freeRoamTimedEvents = [1]
@@ -762,7 +762,10 @@ enterButtonElement.addEventListener("click", () =>
     }
     else if(defaultState[0] === 2 && stagePicker === 'computerRoom')
     {
-        exitComputerRoom()
+        gsap.delayedCall(0.5, () =>
+        {
+            exitComputerRoom()
+        })
         enterButtonElement.classList.remove('show')
         upgradesElement.classList.remove('show')
         hideButtons = false
@@ -820,7 +823,7 @@ computerRoomButtonElement.addEventListener("click", () =>
         currentRoomElement.classList.remove("show")
         hideButtons = true
         navigationHandler()
-        gsap.delayedCall(2, () =>
+        gsap.delayedCall(3, () =>
         {
             enterButtonElement.classList.add("show")
             upgradesElement.classList.add("show")
@@ -994,7 +997,7 @@ key1Element.addEventListener("click", () =>
         defaultState.splice(0,1,2)
         currentRoomElement.innerHTML = "CURRENT ROOM:<br>Computer Room"
         enterButtonElement.innerHTML = "Exit"
-        gsap.delayedCall(2, () =>
+        gsap.delayedCall(3, () =>
         {
             upgradesElement.classList.add('show')
             enterButtonElement.classList.add('show')
