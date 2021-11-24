@@ -7,14 +7,26 @@
 </head>
 <body>
     <div class="loading-screen">
-        <p>Loading...</p>
+        <p class="loading">Loading...</p>
+        <p class="loadingInfo">This digital environment is meant to be experienced over a longer span of time: keep this window running in the backround for the best experience.</p>
     </div>
     <canvas class="webgl"></canvas>
     <div class="upgrades" id="upgrades">
         <div class="menuBar"><p>regedit.exe</p><div><p>&#x2715</p></div><div><p>&#9633</p></div><div><p>-</p></div></div>
-        <button class="clickGain" id="clickGain">Intuitive<br>Touch.exe</button>
-        <button class="workerGain" id="workerGain">Elementary<br>Experience.exe</button>
-        <button class="secret1" id="secret1">strange<br>Sounds.pdf</button>
+        <button class="clickGain1 show" id="clickGain1">Intuitive<br>Touch1.exe</button>
+        <button class="workerGain1 show" id="workerGain1">Elementary<br>Experience1.exe</button>
+        <button class="clickGain2" id="clickGain2">Intuitive<br>Touch2.exe</button>
+        <button class="workerGain2" id="workerGain2">Elementary<br>Experience2.exe</button>
+        <button class="clickGain3" id="clickGain3">Intuitive<br>Touch3.exe</button>
+        <button class="workerGain3" id="workerGain3">Elementary<br>Experience3.exe</button>
+        <button class="broom" id="broom">broom.obj</button>
+        <button class="stone" id="stone">stone.gltf</button>
+        <button class="coffee" id="coffee">coffee.zip</button>
+        <button class="hammer" id="hammer">hammer.obj</button>
+        <button class="screwdriver" id="screwdriver">screwdriver.obj</button>
+        <button class="wateringCan" id="wateringCan">Watering<br>Can.obj</button>
+        <button class="chisel" id="chisel">chisel.obj</button>
+        <button class="drywall" id="drywall">drywall.mat</button>
     </div>
     <div class="clickerMenu">
         <div class="menuBar">
@@ -54,12 +66,20 @@
             <div class="notificationWindow">
                 <div class="menuBar"><p>notif.bat</p><div><p>&#x2715</p></div><div><p>&#9633</p></div><div><p>-</p></div></div>
                 <p class="notification" id="notification"></p>
+                <p class="upgradeInfo" id="upgradeInfo"></p>
             </div>
             <div class="inventory show" id="inventory">
                 <div class="menuBar"><p>Inv.txt</p><div><p>&#x2715</p></div><div><p>&#9633</p></div><div><p>-</p></div></div>
                 <div class="inventoryContainer show">
-                    <button class="key1" id="key1">Key</button>
-                    <button class="boardspdf" id="boardspdf">strangeSounds.pdf</button>
+                    <button class="key1" id="key1">key.gltf</button>
+                    <button class="invBroom" id="invBroom">broom.obj</button>
+                    <button class="invStone" id="invStone">stone.obj</button>
+                    <button class="invCoffee" id="invCoffee">coffee.zip</button>
+                    <button class="invHammer" id="invHammer">hammer.obj</button>
+                    <button class="invScrewdriver" id="invScrewdriver">screwdriver.obj</button>
+                    <button class="invWateringCan" id="invWateringCan">wateringCan.obj</button>
+                    <button class="invChisel" id="invChisel">chisel.obj</button>
+                    <button class="invDrywall" id="invDrywall">drywall.mat</button>
                 </div>
             </div>
             <div class="roomNavigation">

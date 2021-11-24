@@ -8,6 +8,11 @@ html,
 body
 {
     overflow: hidden;
+    user-select: none; /* supported by Chrome and Opera */
+   -webkit-user-select: none; /* Safari */
+   -khtml-user-select: none; /* Konqueror HTML */
+   -moz-user-select: none; /* Firefox */
+   -ms-user-select: none; /* Internet Explorer/Edge */
 }
 
 .webgl
@@ -19,6 +24,76 @@ body
     z-index: -2;
 }
 
+.loading-screen{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    z-index: 3;
+    transition: 1s;
+    opacity: 1;
+}
+
+.loading {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+    font-style: italic;
+}
+
+.loadingInfo
+{
+    position: absolute;
+    left: 50%;
+    top: 60%;
+    width: 30%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+    font-style: italic;
+}
+
+.loading-screen.ended{
+    opacity: 0;
+}
+
+.loading-screen.hide{
+    z-index: -1;
+}
+
+.menuBar{
+    background-color: rgb(36, 36, 36);
+    width: 100%;
+    height: 20px;
+    border: 1px solid rgb(117, 117, 117);
+    box-sizing: border-box;
+    position: relative;
+}
+
+.menuBar p{
+    color: rgb(145, 143, 143);
+    padding-left: 5px;
+    display: inline-block;
+}
+
+.menuBar div{
+    width: 30px;
+    height: 80%;
+    float: right;
+    top: 50%;
+    transform: translate(0, -50%);
+    margin-right: 5px;
+    position: relative;
+    box-sizing: border-box;
+    background-color: rgb(71, 71, 71);
+    border: 1px solid rgb(117, 117, 117);
+}
+
+.menuBar div p{
+    transform: translate(2px, -5px);
+}
+
 .clickerMenu{
     position: absolute;
     bottom: 0;
@@ -26,7 +101,7 @@ body
     width: 76.93%;
     height: 23.1%;
     z-index: -1;
-    background-color: #e8e8e8;
+    background-color: #000000;
 }
 
 .clicker{
@@ -37,7 +112,7 @@ body
     text-decoration: none;
     padding: 5px 10px;
     left: 50%;
-    top: 10%;
+    top: 35%;
     transform: translate(-50%);
     opacity: 0;
     transition: 1s;
@@ -57,21 +132,31 @@ body
     opacity: 1;
 }
 
-.intuition{
+.intuitionContainer
+{
     padding: 2px 3px;
     position: absolute;
-    top: 25%;
+    top: 20%;
     left: 50%;
     transform: translate(-50%);
     color: white;
-    background-color: #404040;
+    display: flex;
+}
+
+.intuition{
+    font-weight: 20px;
+}
+
+.intuitionCost{
+    font-style: italic;
+    color: rgb(255, 188, 188);
 }
 
 .taskbar{
     padding: 3px;
     background-color: #404040;
     position: absolute;
-    top: 40%;
+    top: 70%;
     left: 50%;
     display: flex;
     width: 55%;
@@ -102,6 +187,41 @@ body
     background-color: rgb(255, 188, 188);
 }
 
+.actions{
+    position: absolute;
+    right: 1%;
+    top: 20%;
+    width: 10%;
+    height: 50%;
+}
+
+.actions button{
+    width: 100%;
+    height: 50%;
+    text-decoration: none;
+    background-color: rgb(26, 26, 26);
+    border: none;
+    transition: 0.5s;
+    color: white;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.actions button:hover{
+    background-color: white;
+    color: black;
+}
+
+.action1.show{
+    opacity: 1;
+    visibility: visible;
+}
+
+.action2.show{
+    opacity: 1;
+    visibility: visible;
+}
+
 .navigation{
     right: 0;
     height: 100%;
@@ -111,9 +231,15 @@ body
     z-index: 0;
 }
 
+.headerWindow{
+    position: relative;
+    height: 25%;
+    background-color: black;
+}
+
 .currentRoom{
-    color: white;
-    position: absolute;
+    color: green;
+    position: relative;
     left: 50%;
     top: 2%;
     transform: translate(-50%);
@@ -128,8 +254,8 @@ body
 }
 
 .currentTask{
-    color: white;
-    position: absolute;
+    color: green;
+    position: relative;
     left: 50%;
     top: 8%;
     transform: translate(-50%);
@@ -143,46 +269,42 @@ body
     opacity: 1;
 }
 
+.notificationWindow{
+    position: relative;
+    height: 25%;
+    background-color: black;
+}
+
 .notification{
-    position: absolute;
-    top: 15%;
+    position: relative;
     padding-left: 6px;
-    color: white;
+    color: green;
+}
+
+.upgradeInfo{
+    position: relative;
+    color: rgb(255, 188, 188);
+    padding: 6px
 }
 
 .inventory{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 90%;
-    height: 20%;
-    transform: translate(-50%);
+    position: relative;
+    width: 100%;
+    height: 25%;
     transition: 2s;
     opacity: 0;
+    background-color: white;
 }
 
 .inventory.show{
     opacity: 1;
 }
 
-.inventory p{
-    padding-left: 3px;
-    padding-right: 3px;
-    background-color: #404040;
-    color: white;
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%);
-    z-index: 1;
-}
-
 .inventoryContainer{
-    position: absolute;
     bottom: 0;
     width: 100%;
-    height: 93%;
+    height: 100%;
     box-sizing: border-box;
-    border: 3px solid white;
 }
 
 .inventoryContainer button{
@@ -191,46 +313,40 @@ body
     overflow: hidden;
     float: left;
     box-sizing: border-box;
-    border: 3px solid white;
-    background-color: #404040;
-    color: white;
-    transition: 2s;
+    color: black;
+    transition: 0.5s;
     opacity: 0;
-    visibility: hiddne;
+    visibility: hidden;
+    border: none;
+    background-color: white;
 }
 
-.key1.show{
+.inventoryContainer button:hover{
+    background-color: black;
+    color: white;
+}
+
+.inventoryContainer button.show{
+    visibility: visible;
+    opacity: 1;
+}
+
+.boardspdf.show{
     visibility: visible;
     opacity: 1;
 }
 
 .roomNavigation{
-    position: absolute;
-    top: 71%;
-    left: 50%;
-    width: 90%;
-    height: 28%;
-    transform: translate(-50%);
-}
-
-.roomNavigation p{
-    padding-left: 3px;
-    padding-right: 3px;
-    background-color: #404040;
-    color: white;
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%);
-    z-index: 1;
+    position: relative;
+    width: 100%;
+    height: 25%;
+    background-color: white;
 }
 
 .navigationContainer{
-    position: absolute;
-    bottom: 0;
     width: 100%;
-    height: 93%;
+    height: 100%;
     box-sizing: border-box;
-    border: 3px solid white;
 }
 
 .navigationContainer button{
@@ -239,12 +355,18 @@ body
     overflow: hidden;
     float: left;
     box-sizing: border-box;
-    border: 3px solid white;
-    background-color: #404040;
-    color: white;
-    transition: 2s;
+    text-decoration: none;
+    background: none;
+    color: black;
+    transition: 0.5s;
     opacity: 0;
     visibility: hidden;
+    border: none;
+}
+
+.navigationContainer button:hover{
+    background-color: black;
+    color: white;
 }
 
 .enterButton.show{
@@ -255,13 +377,11 @@ body
 .sinkButton.show{
     visibility: visible;
     opacity: 1;
-    transition-delay: 2s;
 }
 
 .computerRoomButton.show{
     visibility: visible;
     opacity: 1;
-    transition-delay: 2s;
 }
 
 .floorBoardsButton.show{
@@ -272,7 +392,6 @@ body
 .deskButton.show{
     visibility: visible;
     opacity: 1;
-    transition-delay: 2s;
 }
 
 .TVButton.show{
@@ -283,57 +402,72 @@ body
 .bathroomButton.show{
     visibility: visible;
     opacity: 1;
-    transition-delay: 2s;
 }
 
 .backDoorButton.show{
     visibility: visible;
     opacity: 1;
-    transition-delay: 2s;
 }
 
 .keepingRoomButton.show{
-    transition-delay: 2s;
     visibility: visible;
     opacity: 1;
 }
 
 .freeRoamButton.show{
-    transition-delay: 2s;
     visibility: visible;
     opacity: 1;
 }
 
+.allTasks.show{
+    visibility: none;
+    opacity: 0;
+}
+
+/* UPGRADES */
+
 .upgrades{
     position: absolute;
     width: 60%;
-    height: 35%;
-    top: 65%;
-    left: 50%;
+    height: 50%;
+    top: 10%;
+    left: 38%;
     transform: translate(-50%);
     opacity: 0;
     visibility: hidden;
-    transition: 2s;
+    background-color: white;
 }
 
 .upgrades.show{
     opacity: 1;
     visibility: visible;
-    transition: 2s;
-    transition-delay: 2s;
 }
 
 .upgrades button{
-    color: white;
-    background-color: #404040;
+    color: black;
+    background-color: white;
     text-decoration: none;
     border: none;
     background-color: none;
-    height: 50%; 
+    height: 15%; 
     width: 25%;
     float: left;
+    transition: 0.5s;
+    font-style: italic;
+    word-wrap: break-word;
+    opacity: 0;
+    visibility: hidden;
 }
 
+.upgrades button:hover{
+    background-color: black;
+    color: white;
+}
+
+.upgrades button.show{
+    opacity: 1;
+    visibility: visible;
+}
 
 
 
